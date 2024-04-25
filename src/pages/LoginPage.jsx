@@ -8,8 +8,45 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import loginImage from "../assets/login.jpg";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:3000/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const responseData = await response.json();
+      const message = responseData.message;
+
+      if (response.ok) {
+        toast.success(message);
+      } else {
+        toast.error(message);
+      }
+
+      setEmail("");
+      setPassword("");
+    } catch (error) {
+      console.error("Error occurred during login:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
       <div className="flex items-center justify-center py-12">
@@ -25,7 +62,9 @@ export default function Login() {
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
-                placeholder="m@example.com"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 type="email"
               />
@@ -34,9 +73,15 @@ export default function Login() {
               <div className="flex items-center">
                 <Label htmlFor="password">Password</Label>
               </div>
-              <Input id="password" required type="password" />
+              <Input
+                id="password"
+                required
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
-            <Button className="w-full" type="submit">
+            <Button className="w-full" type="submit" onClick={handleLogin}>
               Login
             </Button>
             <Button className="w-full" variant="outline">
