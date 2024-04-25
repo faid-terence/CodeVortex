@@ -1,7 +1,7 @@
 import Router from "@/Routes/Router";
 import React from "react";
 
-export const layout = () => {
+export const Layout = () => {
   return (
     <main>
       <Router />

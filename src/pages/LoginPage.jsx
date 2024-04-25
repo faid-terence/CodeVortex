@@ -10,11 +10,13 @@ import { Link } from "react-router-dom";
 import loginImage from "../assets/login.jpg";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -40,6 +42,7 @@ export default function Login() {
 
       setEmail("");
       setPassword("");
+      navigate("/admin/orders");
     } catch (error) {
       console.error("Error occurred during login:", error);
     } finally {
